@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FCFCFC"
     tools:context=".MainActivity">
 
     <com.andexert.calendarlistview.library.DayPickerView
@@ -10,6 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         calendar:currentDaySelected="false"
-        calendar:drawRoundRect="true" />
+        calendar:colorCurrentDay="#3B3B3B"
+        calendar:colorNormalDay="#3B3B3B"
+        calendar:colorSelectedDayText="#3B3B3B"
+        calendar:colorSelectedDayBackground="#FFD720"
+        calendar:drawRoundRect="false" />
 
 </RelativeLayout>

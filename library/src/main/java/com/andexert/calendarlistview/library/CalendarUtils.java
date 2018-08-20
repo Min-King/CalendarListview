@@ -23,6 +23,8 @@
  ***********************************************************************************/
 package com.andexert.calendarlistview.library;
 
+import android.util.Log;
+
 import java.util.Calendar;
 
 
@@ -55,7 +57,7 @@ public class CalendarUtils {
      * @return true：未来 false：过去
      */
     public static boolean isFuture(DatePickerController controller) {
-        if(controller==null){
+        if (controller == null) {
             return true;
         }
         if (controller.getMaxYear() > 0) {
@@ -63,5 +65,9 @@ public class CalendarUtils {
         } else {
             return false;
         }
+    }
+
+    public static void Log(String msg) {
+        Log.e("lyd", msg);
     }
 }

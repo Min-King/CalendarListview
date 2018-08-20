@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="DayPickerView">
-        <attr name="colorCurrentDay" format="color"/>
-        <attr name="colorSelectedDayBackground" format="color"/>
-        <attr name="colorSelectedDayText" format="color"/>
-        <attr name="colorPreviousDay" format="color"/>
+        <attr name="colorCurrentDay" format="color" />
+        <attr name="colorSelectedDayBackground" format="color" />
+        <attr name="colorSelectedDayText" format="color" />
+        <attr name="colorSelectedIntervalBackground" format="color" />
+        <attr name="colorPreviousDay" format="color" />
         <attr name="colorNormalDay" format="color" />
         <attr name="colorMonthName" format="color" />
         <attr name="colorDayName" format="color" />
-        <attr name="textSizeDay" format="dimension"/>
+        <attr name="textSizeDay" format="dimension" />
+        <!-- "今天"的文字大小 -->
+        <attr name="textSizeToday" format="dimension" />
         <attr name="textSizeMonth" format="dimension" />
         <attr name="textSizeDayName" format="dimension" />
         <attr name="headerMonthHeight" format="dimension" />

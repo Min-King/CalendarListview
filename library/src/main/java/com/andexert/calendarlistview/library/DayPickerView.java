@@ -59,12 +59,6 @@ public class DayPickerView extends RecyclerView {
 
     public void setController(DatePickerController mController) {
         this.mController = mController;
-        //根据配置资源选择模式
-        if (CalendarUtils.isFuture(mController)) {
-            setLayoutManager(new LinearLayoutManager(mContext));
-        } else {
-            setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, true));
-        }
         setUpAdapter();
         setAdapter(mAdapter);
         //设置列表显示位置
@@ -75,6 +69,7 @@ public class DayPickerView extends RecyclerView {
 
     public void init(Context paramContext) {
         mContext = paramContext;
+        setLayoutManager(new LinearLayoutManager(mContext));
         setUpListView();
 
         onScrollListener = new OnScrollListener() {
