@@ -28,7 +28,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
@@ -67,6 +66,8 @@ class SimpleMonthView extends View {
     protected static int MINI_DAY_NUMBER_TEXT_SIZE_TODAY;
     protected static int MIN_HEIGHT = 10;
     protected static int MONTH_DAY_LABEL_TEXT_SIZE;
+    //下移距离，当不显示星期标题的时候，年月标题需要下移一段距离，值跟MONTH_DAY_LABEL_TEXT_SIZE一致
+    protected static int MONTH_DAY_LABEL_MOVE_DOWN;
     protected static int MONTH_HEADER_SIZE;
     protected static int MONTH_LABEL_TEXT_SIZE;
 
@@ -110,6 +111,10 @@ class SimpleMonthView extends View {
     private int mDayOfWeekStart = 0;
     protected int mMonth;
     protected Boolean mDrawRect;
+    /**
+     * 是否绘制月份表头 true绘制
+     */
+    protected Boolean mDrawMonthDayLabels = true;
     protected int mRowHeight = DEFAULT_HEIGHT;
     protected int mWidth;
     protected int mYear;
@@ -145,6 +150,7 @@ class SimpleMonthView extends View {
         mSelectedIntervalBGColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedIntervalBackground, resources.getColor(R.color.selected_interval_background));
 
         mDrawRect = typedArray.getBoolean(R.styleable.DayPickerView_drawRoundRect, false);
+        mDrawMonthDayLabels = typedArray.getBoolean(R.styleable.DayPickerView_drawMonthDayLabels, true);
 
         mStringBuilder = new StringBuilder(50);
 
@@ -152,6 +158,7 @@ class SimpleMonthView extends View {
         MINI_DAY_NUMBER_TEXT_SIZE_TODAY = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_textSizeToday, resources.getDimensionPixelSize(R.dimen.text_size_today));
         MONTH_LABEL_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_textSizeMonth, resources.getDimensionPixelSize(R.dimen.text_size_month));
         MONTH_DAY_LABEL_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_textSizeDayName, resources.getDimensionPixelSize(R.dimen.text_size_day_name));
+        MONTH_DAY_LABEL_MOVE_DOWN = MONTH_DAY_LABEL_TEXT_SIZE;
         MONTH_HEADER_SIZE = typedArray.getDimensionPixelOffset(R.styleable.DayPickerView_headerMonthHeight, resources.getDimensionPixelOffset(R.dimen.header_month_height));
         DAY_SELECTED_CIRCLE_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_selectedDayRadius, resources.getDimensionPixelOffset(R.dimen.selected_day_radius));
 
@@ -170,6 +177,11 @@ class SimpleMonthView extends View {
         return (dividend + (remainder > 0 ? 1 : 0));
     }
 
+    /**
+     * 绘制表头星期
+     *
+     * @param canvas
+     */
     private void drawMonthDayLabels(Canvas canvas) {
         int y = MONTH_HEADER_SIZE - (MONTH_DAY_LABEL_TEXT_SIZE / 2);
         int dayWidthHalf = (mWidth - mPadding * 2) / (mNumDays * 2);
@@ -182,9 +194,16 @@ class SimpleMonthView extends View {
         }
     }
 
+    /**
+     * 绘制标题年份
+     *
+     * @param canvas
+     */
     private void drawMonthTitle(Canvas canvas) {
         int x = (mWidth + 2 * mPadding) / 2;
-        int y = (MONTH_HEADER_SIZE - MONTH_DAY_LABEL_TEXT_SIZE) / 2 + (MONTH_LABEL_TEXT_SIZE / 3);
+        //下移距离，当不显示星期标题的时候，年月标题需要下移一段距离
+        int moveDown = mDrawMonthDayLabels ? 0 : MONTH_DAY_LABEL_MOVE_DOWN;
+        int y = (MONTH_HEADER_SIZE - MONTH_DAY_LABEL_TEXT_SIZE) / 2 + (MONTH_LABEL_TEXT_SIZE / 3) + moveDown;
         StringBuilder stringBuilder = new StringBuilder(getMonthAndYearString().toLowerCase());
         stringBuilder.setCharAt(0, Character.toUpperCase(stringBuilder.charAt(0)));
         canvas.drawText(stringBuilder.toString(), x, y, mMonthTitlePaint);
@@ -387,7 +406,12 @@ class SimpleMonthView extends View {
 
     protected void onDraw(Canvas canvas) {
         drawMonthTitle(canvas);
-        drawMonthDayLabels(canvas);
+        //判断是否绘制星期表头
+        if (mDrawMonthDayLabels) {
+            drawMonthDayLabels(canvas);
+        } else {
+            MONTH_DAY_LABEL_TEXT_SIZE = 0;
+        }
         drawMonthNums(canvas);
     }
 

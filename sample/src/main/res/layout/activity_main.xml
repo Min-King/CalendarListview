@@ -10,11 +10,13 @@
         android:id="@+id/pickerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        calendar:currentDaySelected="false"
         calendar:colorCurrentDay="#3B3B3B"
+        calendar:colorMonthName="#3B3B3B"
         calendar:colorNormalDay="#3B3B3B"
-        calendar:colorSelectedDayText="#3B3B3B"
         calendar:colorSelectedDayBackground="#FFD720"
+        calendar:colorSelectedDayText="#3B3B3B"
+        calendar:currentDaySelected="false"
+        calendar:drawMonthDayLabels="false"
         calendar:drawRoundRect="false" />
 
 </RelativeLayout>

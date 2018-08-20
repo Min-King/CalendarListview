@@ -28,7 +28,6 @@ import android.content.res.TypedArray;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 
 public class DayPickerView extends RecyclerView {
     protected Context mContext;
@@ -90,9 +89,18 @@ public class DayPickerView extends RecyclerView {
 
     protected void setUpAdapter() {
         if (mAdapter == null) {
-            mAdapter = new SimpleMonthAdapter(getContext(), mController, typedArray);
+            mAdapter = new SimpleMonthAdapter(getContext(), Config.TYPE_NORMAL, mController, typedArray);
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 设置模式类型
+     *
+     * @param modelType
+     */
+    public void setModelType(int modelType) {
+        mAdapter.setModelType(modelType);
     }
 
     protected void setUpListView() {

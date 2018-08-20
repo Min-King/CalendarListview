@@ -26,7 +26,6 @@ package com.andexert.calendarlistview.library;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -53,12 +52,18 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
      */
     private final Integer lastMonth;
 
-    public SimpleMonthAdapter(Context context, DatePickerController datePickerController, TypedArray typedArray) {
+    /**
+     * 控件模式类型
+     */
+    private int modelType = Config.TYPE_NORMAL;
+
+    public SimpleMonthAdapter(Context context, @AModelType int modelType, DatePickerController datePickerController, TypedArray typedArray) {
         this.typedArray = typedArray;
         calendar = Calendar.getInstance();
         firstMonth = typedArray.getInt(R.styleable.DayPickerView_firstMonth, calendar.get(Calendar.MONTH));
         lastMonth = typedArray.getInt(R.styleable.DayPickerView_lastMonth, (calendar.get(Calendar.MONTH) - 1) % MONTHS_IN_YEAR);
         selectedDays = new SelectedDays<>();
+        this.modelType = modelType;
         mContext = context;
         mController = datePickerController;
         init();
@@ -84,7 +89,6 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
             month = (firstMonth + (position % MONTHS_IN_YEAR) + 1) % MONTHS_IN_YEAR;
             year = position / MONTHS_IN_YEAR + mController.getMinYear() + ((firstMonth + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
         }
-        Log.e("lyd", " data " + month + "  " + year);
 
         int selectedFirstDay = -1;
         int selectedLastDay = -1;
@@ -145,6 +149,16 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         return itemCount;
     }
 
+    /**
+     * 设置控件模式类型
+     *
+     * @param modelType
+     */
+    public void setModelType(@AModelType int modelType) {
+        this.modelType = modelType;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final SimpleMonthView simpleMonthView;
 
@@ -174,6 +188,23 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     }
 
     public void setSelectedDay(CalendarDay calendarDay) {
+        switch (modelType) {
+            case Config.TYPE_NORMAL:
+                setSelectedDayToNormal(calendarDay);
+                break;
+            case Config.TYPE_SINGLE:
+                setSelectedDayToSingle(calendarDay);
+                break;
+        }
+        notifyDataSetChanged();
+    }
+
+    /**
+     * normal模式下的点击后的数据处理
+     *
+     * @param calendarDay
+     */
+    private void setSelectedDayToNormal(CalendarDay calendarDay) {
         if (selectedDays.getFirst() != null && selectedDays.getLast() == null) {
             selectedDays.setLast(calendarDay);
 
@@ -186,10 +217,19 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         } else if (selectedDays.getLast() != null) {
             selectedDays.setFirst(calendarDay);
             selectedDays.setLast(null);
-        } else
+        } else {
             selectedDays.setFirst(calendarDay);
+        }
+    }
 
-        notifyDataSetChanged();
+    /**
+     * single模式下的点击后的数据处理
+     *
+     * @param calendarDay
+     */
+    private void setSelectedDayToSingle(CalendarDay calendarDay) {
+        selectedDays.setFirst(calendarDay);
+        selectedDays.setLast(null);
     }
 
     public static class CalendarDay implements Serializable {
