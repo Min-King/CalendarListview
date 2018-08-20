@@ -75,6 +75,7 @@ CalendarListview is fully customizable:
 * app:lastMonth [enum def:-1] --> End listview at the specified month
 * app:textSizeToday [dimension def:9dp] --> "今天"提示文字的内容
 * app:colorSelectedIntervalBackground [color def:#F2F0EC] --> 选中两个日期之间的背景颜色
+* app:drawMonthDayLabels [boolean def:#true] --> 是否显示表格中星期日期
 
 ### Contact
 

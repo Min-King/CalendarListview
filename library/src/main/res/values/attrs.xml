@@ -20,7 +20,7 @@
         <attr name="enablePreviousDay" format="boolean" />
         <attr name="currentDaySelected" format="boolean" />
         <attr name="drawRoundRect" format="boolean" />
-        <!-- 是否显示表格中周末日期 -->
+        <!-- 是否显示表格中星期日期 -->
         <attr name="drawMonthDayLabels" format="boolean" />
         <attr name="firstMonth" format="enum">
             <enum name="january" value="0" />
