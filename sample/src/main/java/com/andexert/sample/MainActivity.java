@@ -46,7 +46,12 @@ public class MainActivity extends Activity implements com.andexert.calendarlistv
     @Override
     public int getMaxYear()
     {
-        return 2015;
+        return 0;
+    }
+
+    @Override
+    public int getMinYear() {
+        return 2017;
     }
 
     @Override

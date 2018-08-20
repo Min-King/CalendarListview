@@ -26,9 +26,8 @@ package com.andexert.calendarlistview.library;
 import java.util.Calendar;
 
 
-public class CalendarUtils
-{
-	public static int getDaysInMonth(int month, int year) {
+public class CalendarUtils {
+    public static int getDaysInMonth(int month, int year) {
         switch (month) {
             case Calendar.JANUARY:
             case Calendar.MARCH:
@@ -48,5 +47,21 @@ public class CalendarUtils
             default:
                 throw new IllegalArgumentException("Invalid Month");
         }
-	}
+    }
+
+    /**
+     * 判断选择未来的时间还是过去的时间
+     *
+     * @return true：未来 false：过去
+     */
+    public static boolean isFuture(DatePickerController controller) {
+        if(controller==null){
+            return true;
+        }
+        if (controller.getMaxYear() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
