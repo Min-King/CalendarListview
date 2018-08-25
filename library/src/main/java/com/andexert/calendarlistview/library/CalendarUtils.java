@@ -68,6 +68,6 @@ public class CalendarUtils {
     }
 
     public static void Log(String msg) {
-        Log.e("lyd", msg);
+//        Log.e("lyd", msg);
     }
 }
