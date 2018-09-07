@@ -288,6 +288,14 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
             return calendar.getTime();
         }
 
+        public int getYearDay(){
+            if(calendar==null){
+                calendar = Calendar.getInstance();
+            }
+            calendar.set(year,month,day);
+            return calendar.get(Calendar.DAY_OF_YEAR);
+        }
+
         @Override
         public String toString() {
             final StringBuilder stringBuilder = new StringBuilder();

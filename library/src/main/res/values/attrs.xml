@@ -5,6 +5,8 @@
         <attr name="colorSelectedDayBackground" format="color" />
         <attr name="colorSelectedDayText" format="color" />
         <attr name="colorSelectedIntervalBackground" format="color" />
+        <!-- 不能点击的日期的颜色 -->
+        <attr name="colorUnClick" format="color" />
         <attr name="colorPreviousDay" format="color" />
         <attr name="colorNormalDay" format="color" />
         <attr name="colorMonthName" format="color" />

@@ -81,6 +81,7 @@ class SimpleMonthView extends View {
     protected Paint mMonthTitleBGPaint;
     protected Paint mMonthTitlePaint;
     protected Paint mSelectedCirclePaint;
+
     /**
      * 选中两个日期之间的背景
      */
@@ -93,6 +94,10 @@ class SimpleMonthView extends View {
     protected int mPreviousDayColor;
     protected int mSelectedDaysColor;
     protected int mSelectedIntervalBGColor;
+    /**
+     * 不能点击的日期颜色
+     */
+    protected int mUnClickDayColor;
 
     private final StringBuilder mStringBuilder;
 
@@ -148,6 +153,7 @@ class SimpleMonthView extends View {
         mSelectedDaysColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayBackground, resources.getColor(R.color.selected_day_background));
         mMonthTitleBGColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayText, resources.getColor(R.color.selected_day_text));
         mSelectedIntervalBGColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedIntervalBackground, resources.getColor(R.color.selected_interval_background));
+        mUnClickDayColor = typedArray.getColor(R.styleable.DayPickerView_colorUnClick, resources.getColor(R.color.greyText));
 
         mDrawRect = typedArray.getBoolean(R.styleable.DayPickerView_drawRoundRect, false);
         mDrawMonthDayLabels = typedArray.getBoolean(R.styleable.DayPickerView_drawMonthDayLabels, true);
@@ -222,7 +228,11 @@ class SimpleMonthView extends View {
     }
 
     private void onDayClick(SimpleMonthAdapter.CalendarDay calendarDay) {
-        if (mOnDayClickListener != null && (isPrevDayEnabled || !((calendarDay.month == today.month) && (calendarDay.year == today.year) && calendarDay.day < today.monthDay))) {
+        if (mOnDayClickListener == null) {
+            return;
+        }
+        //只能选择今天或者之前的时间(比较的是yearDay)
+        if (calendarDay.getYearDay() - 1 <= today.yearDay) {
             mOnDayClickListener.onDayClick(this, calendarDay);
         }
     }
@@ -250,6 +260,11 @@ class SimpleMonthView extends View {
             if (mHasToday && (mToday == day)) {
                 mMonthNumPaint.setColor(mCurrentDayTextColor);
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            }
+            //设置今日后的日期颜色（新牛档产品需要）
+            else if (mToday != -1 && day > mToday) {
+                mMonthNumPaint.setColor(mUnClickDayColor);
+                mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             }
             //设置非当前日期文字颜色大小
             else {
