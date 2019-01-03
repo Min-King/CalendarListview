@@ -36,7 +36,6 @@ import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.MotionEvent;
 import android.view.View;
-
 import java.security.InvalidParameterException;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -231,8 +230,13 @@ class SimpleMonthView extends View {
         if (mOnDayClickListener == null) {
             return;
         }
-        //只能选择今天或者之前的时间(比较的是yearDay)
-        if (calendarDay.getYearDay() - 1 <= today.yearDay) {
+        //只能选择今天或者之前的时间
+        //不同年比年份
+        if (calendarDay.year < today.year) {
+            mOnDayClickListener.onDayClick(this, calendarDay);
+        }
+        //同年比年日期
+        else if ((calendarDay.year == today.year) && (calendarDay.getYearDay() - 1 <= today.yearDay)) {
             mOnDayClickListener.onDayClick(this, calendarDay);
         }
     }

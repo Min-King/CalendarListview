@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
-
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,7 +76,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        final SimpleMonthView v = viewHolder.simpleMonthView;
+        final SimpleMonthView monthView = viewHolder.simpleMonthView;
         final HashMap<String, Integer> drawingParams = new HashMap<String, Integer>();
         int month;
         int year;
@@ -87,7 +86,8 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
             year = position / MONTHS_IN_YEAR + calendar.get(Calendar.YEAR) + ((firstMonth + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
         } else {
             month = (firstMonth + (position % MONTHS_IN_YEAR) + 1) % MONTHS_IN_YEAR;
-            year = position / MONTHS_IN_YEAR + mController.getMinYear() + ((firstMonth + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
+            //例：2019-1-3（minYear:2018,itemCount:12） 11/12+2018+((0+1+(11%12))/12
+            year = position / MONTHS_IN_YEAR + mController.getMinYear() + ((firstMonth + 1 + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
         }
 
         int selectedFirstDay = -1;
@@ -109,7 +109,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
             selectedLastYear = selectedDays.getLast().year;
         }
 
-        v.reuse();
+        monthView.reuse();
 
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_SELECTED_BEGIN_YEAR, selectedFirstYear);
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_SELECTED_LAST_YEAR, selectedLastYear);
@@ -120,8 +120,8 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_YEAR, year);
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_MONTH, month);
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_WEEK_START, calendar.getFirstDayOfWeek());
-        v.setMonthParams(drawingParams);
-        v.invalidate();
+        monthView.setMonthParams(drawingParams);
+        monthView.invalidate();
     }
 
     public long getItemId(int position) {
@@ -137,7 +137,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         }
         //显示最小时间～当前时间
         else {
-            itemCount = (((calendar.get(Calendar.YEAR) - mController.getMinYear()) + 1) * MONTHS_IN_YEAR);
+            itemCount = (((calendar.get(Calendar.YEAR) - mController.getMinYear())) * MONTHS_IN_YEAR);
         }
 
         if (firstMonth != -1)
@@ -145,7 +145,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
         if (lastMonth != -1)
             itemCount -= (MONTHS_IN_YEAR - lastMonth) - 1;
-
+        //需要显示的月份个数
         return itemCount;
     }
 
@@ -288,11 +288,11 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
             return calendar.getTime();
         }
 
-        public int getYearDay(){
-            if(calendar==null){
+        public int getYearDay() {
+            if (calendar == null) {
                 calendar = Calendar.getInstance();
             }
-            calendar.set(year,month,day);
+            calendar.set(year, month, day);
             return calendar.get(Calendar.DAY_OF_YEAR);
         }
 
