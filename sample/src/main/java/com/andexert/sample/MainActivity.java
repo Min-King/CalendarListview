@@ -53,7 +53,7 @@ public class MainActivity extends Activity implements com.andexert.calendarlistv
 
     @Override
     public int getMinYear() {
-        return 2017;
+        return 2000;
     }
 
     @Override

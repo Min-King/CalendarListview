@@ -102,6 +102,7 @@ class SimpleMonthView extends View {
 
     protected boolean mHasToday = false;
     protected boolean mIsPrev = false;
+    //Begin：第一个选择日期 Last：第二个选择的日期
     protected int mSelectedBeginDay = -1;
     protected int mSelectedLastDay = -1;
     protected int mSelectedBeginMonth = -1;
@@ -293,40 +294,30 @@ class SimpleMonthView extends View {
                 mMonthNumPaint.setColor(mSelectedDaysColor);
                 CalendarUtils.Log("color 2 " + day);
             }
-
-            /**
-             * 两个选中日期之间的区间
-             */
-            if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1 && mSelectedBeginYear == mSelectedLastYear && mSelectedBeginYear == mYear) &&
-                    (((mMonth == mSelectedBeginMonth && mSelectedLastMonth == mSelectedBeginMonth) && ((mSelectedBeginDay < mSelectedLastDay && day > mSelectedBeginDay && day < mSelectedLastDay) || (mSelectedBeginDay > mSelectedLastDay && day < mSelectedBeginDay && day > mSelectedLastDay))) ||
-                            ((mSelectedBeginMonth < mSelectedLastMonth && mMonth == mSelectedBeginMonth && day > mSelectedBeginDay) || (mSelectedBeginMonth < mSelectedLastMonth && mMonth == mSelectedLastMonth && day < mSelectedLastDay)) ||
-                            ((mSelectedBeginMonth > mSelectedLastMonth && mMonth == mSelectedBeginMonth && day < mSelectedBeginDay) || (mSelectedBeginMonth > mSelectedLastMonth && mMonth == mSelectedLastMonth && day > mSelectedLastDay)))) {
-                //设置两个选中日期之间的区间背景
-                canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedIntervalPaint);
-                CalendarUtils.Log("color 3 " + day);
-            }
-
-            if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1 && mSelectedBeginYear != mSelectedLastYear && ((mSelectedBeginYear == mYear && mMonth == mSelectedBeginMonth) || (mSelectedLastYear == mYear && mMonth == mSelectedLastMonth)) &&
-                    (((mSelectedBeginMonth < mSelectedLastMonth && mMonth == mSelectedBeginMonth && day < mSelectedBeginDay) || (mSelectedBeginMonth < mSelectedLastMonth && mMonth == mSelectedLastMonth && day > mSelectedLastDay)) ||
-                            ((mSelectedBeginMonth > mSelectedLastMonth && mMonth == mSelectedBeginMonth && day > mSelectedBeginDay) || (mSelectedBeginMonth > mSelectedLastMonth && mMonth == mSelectedLastMonth && day < mSelectedLastDay))))) {
-                mMonthNumPaint.setColor(mSelectedDaysColor);
-                CalendarUtils.Log("color 4 " + day);
-            }
-
             if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1 && mSelectedBeginYear == mSelectedLastYear && mYear == mSelectedBeginYear) &&
                     ((mMonth > mSelectedBeginMonth && mMonth < mSelectedLastMonth && mSelectedBeginMonth < mSelectedLastMonth) ||
                             (mMonth < mSelectedBeginMonth && mMonth > mSelectedLastMonth && mSelectedBeginMonth > mSelectedLastMonth))) {
                 mMonthNumPaint.setColor(mSelectedDaysColor);
                 CalendarUtils.Log("color 5 " + day);
             }
-
-            if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1 && mSelectedBeginYear != mSelectedLastYear) &&
-                    ((mSelectedBeginYear < mSelectedLastYear && ((mMonth > mSelectedBeginMonth && mYear == mSelectedBeginYear) || (mMonth < mSelectedLastMonth && mYear == mSelectedLastYear))) ||
-                            (mSelectedBeginYear > mSelectedLastYear && ((mMonth < mSelectedBeginMonth && mYear == mSelectedBeginYear) || (mMonth > mSelectedLastMonth && mYear == mSelectedLastYear))))) {
-                mMonthNumPaint.setColor(mSelectedDaysColor);
-                CalendarUtils.Log("color 6 " + day);
+            //设置两个选中日期之间的背景颜色
+            //判断是否选中两个日期
+            if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1)){
+                long start = Utils.getTimeInMillis(mSelectedBeginYear, mSelectedBeginMonth, mSelectedBeginDay);
+                long end = Utils.getTimeInMillis(mSelectedLastYear, mSelectedLastMonth, mSelectedLastDay);
+                long newTime = Utils.getTimeInMillis(mYear, mMonth, day);
+                //开始时间大于结束时间，交换两个时间的位置
+                if (start > end) {
+                    long t = end;
+                    end = start;
+                    start = t;
+                }
+                //日期在开始日期和结束日期之间
+                if (newTime > start && newTime < end) {
+                    canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedIntervalPaint);
+                    CalendarUtils.Log("color 6 " + mYear + "  " + mMonth + "  " + day);
+                }
             }
-
             if (!isPrevDayEnabled && prevDay(day, today) && today.month == mMonth && today.year == mYear) {
                 mMonthNumPaint.setColor(mPreviousDayColor);
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));

@@ -205,7 +205,17 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
      * @param calendarDay
      */
     private void setSelectedDayToNormal(CalendarDay calendarDay) {
+        //已选择第一天，没有选择第二天
         if (selectedDays.getFirst() != null && selectedDays.getLast() == null) {
+            //第一天时间戳
+            long first = Utils.getTimeInMillis(selectedDays.first.year, selectedDays.first.month, selectedDays.first.day);
+            long last = Utils.getTimeInMillis(calendarDay.year, calendarDay.month, calendarDay.day);
+            //点击开始结束为同一天，取消两次选择
+            if (first == last) {
+                selectedDays.setFirst(null);
+                selectedDays.setLast(null);
+                return;
+            }
             selectedDays.setLast(calendarDay);
 
             if (selectedDays.getFirst().month < calendarDay.month) {
@@ -214,10 +224,14 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
             }
 
             mController.onDateRangeSelected(selectedDays);
-        } else if (selectedDays.getLast() != null) {
+        }
+        //第一天，第二天都被选择，清空第一天数据
+        else if (selectedDays.getLast() != null) {
             selectedDays.setFirst(calendarDay);
             selectedDays.setLast(null);
-        } else {
+        }
+        //两天都没选择，设置第一天
+        else {
             selectedDays.setFirst(calendarDay);
         }
     }
