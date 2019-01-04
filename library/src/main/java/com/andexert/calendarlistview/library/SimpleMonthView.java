@@ -36,6 +36,7 @@ import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.MotionEvent;
 import android.view.View;
+
 import java.security.InvalidParameterException;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -242,13 +243,15 @@ class SimpleMonthView extends View {
         //不同年比年份
         if (calendarDay.year < today.year) {
             //点击日期的时间戳
-            long clickMillis = Utils.getTimeInMillis(calendarDay.year, calendarDay.month, calendarDay.day);
+            long clickMillis = Utils.getTimeInMillis(calendarDay.year, calendarDay.month + 1, calendarDay.day);
             //当设置限制点击的时候，判断点击时间是否比限制时间大
             if (mLimitMillis != -1 && mLimitMillis <= clickMillis) {
                 mOnDayClickListener.onDayClick(this, calendarDay);
                 return;
             }
-            mOnDayClickListener.onDayClick(this, calendarDay);
+            if (mLimitMillis == -1) {
+                mOnDayClickListener.onDayClick(this, calendarDay);
+            }
         }
         //同年比年日期
         else if ((calendarDay.year == today.year) && (calendarDay.getYearDay() - 1 <= today.yearDay)) {
@@ -272,7 +275,7 @@ class SimpleMonthView extends View {
 
         while (day <= mNumCells) {
             //日期item中的时间
-            long todayMillis = Utils.getTimeInMillis(mYear, mMonth+1, day);
+            long todayMillis = Utils.getTimeInMillis(mYear, mMonth + 1, day);
             //设置今日后的日期颜色（新牛档产品需要）
 
             int x = paddingDay * (1 + dayOffset * 2) + mPadding;
