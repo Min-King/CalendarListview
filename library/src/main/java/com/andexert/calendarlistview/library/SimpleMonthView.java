@@ -272,7 +272,8 @@ class SimpleMonthView extends View {
 
         while (day <= mNumCells) {
             //日期item中的时间
-            long todayMillis = Utils.getTimeInMillis(mYear, mMonth, day);
+            long todayMillis = Utils.getTimeInMillis(mYear, mMonth+1, day);
+            //设置今日后的日期颜色（新牛档产品需要）
 
             int x = paddingDay * (1 + dayOffset * 2) + mPadding;
             if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear) || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)) {
@@ -288,7 +289,7 @@ class SimpleMonthView extends View {
                 mMonthNumPaint.setColor(mUnClickDayColor);
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             }
-            //设置今日后的日期颜色（新牛档产品需要）
+            //设置限制日期之前的时间
             else if (mLimitMillis != -1 && todayMillis < mLimitMillis) {
                 mMonthNumPaint.setColor(mUnClickDayColor);
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));

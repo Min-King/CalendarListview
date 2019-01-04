@@ -52,19 +52,19 @@ public class MainActivity extends Activity  {
             return 2010;
         }
 
-//        @Override
-//        public int getLimitYear() {
-//            return 2017;
-//        }
-//
-//        @Override
-//        public int getLimitMonth() {
-//            return 10;
-//        }
-//
-//        @Override
-//        public int getLimitDay() {
-//            return 24;
-//        }
+        @Override
+        public int getLimitYear() {
+            return 2018;
+        }
+
+        @Override
+        public int getLimitMonth() {
+            return 12;
+        }
+
+        @Override
+        public int getLimitDay() {
+            return 28;
+        }
     }
 }
