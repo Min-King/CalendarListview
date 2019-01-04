@@ -24,6 +24,15 @@
 package com.andexert.calendarlistview.library;
 
 public interface DatePickerController {
+
+	/**
+	 * 限制选择的最小时间（注：限制当天可以正常显示选择）
+	 * @return
+	 */
+	public abstract int getLimitDay();
+	public abstract int getLimitMonth();
+	public abstract int getLimitYear();
+
 	public abstract int getMaxYear();
 
 	public abstract int getMinYear();

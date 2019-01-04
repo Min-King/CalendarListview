@@ -116,6 +116,12 @@ class SimpleMonthView extends View {
     private int mDayOfWeekStart = 0;
     protected int mMonth;
     protected Boolean mDrawRect;
+
+    /**
+     * 时间限制(限制能点击的最小时间)
+     */
+    protected long mLimitMillis;
+
     /**
      * 是否绘制月份表头 true绘制
      */
@@ -231,9 +237,17 @@ class SimpleMonthView extends View {
         if (mOnDayClickListener == null) {
             return;
         }
+
         //只能选择今天或者之前的时间
         //不同年比年份
         if (calendarDay.year < today.year) {
+            //点击日期的时间戳
+            long clickMillis = Utils.getTimeInMillis(calendarDay.year, calendarDay.month, calendarDay.day);
+            //当设置限制点击的时候，判断点击时间是否比限制时间大
+            if (mLimitMillis != -1 && mLimitMillis <= clickMillis) {
+                mOnDayClickListener.onDayClick(this, calendarDay);
+                return;
+            }
             mOnDayClickListener.onDayClick(this, calendarDay);
         }
         //同年比年日期
@@ -257,6 +271,9 @@ class SimpleMonthView extends View {
         int day = 1;
 
         while (day <= mNumCells) {
+            //日期item中的时间
+            long todayMillis = Utils.getTimeInMillis(mYear, mMonth, day);
+
             int x = paddingDay * (1 + dayOffset * 2) + mPadding;
             if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear) || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)) {
                 canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedCirclePaint);
@@ -268,6 +285,11 @@ class SimpleMonthView extends View {
             }
             //设置今日后的日期颜色（新牛档产品需要）
             else if (mToday != -1 && day > mToday) {
+                mMonthNumPaint.setColor(mUnClickDayColor);
+                mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+            }
+            //设置今日后的日期颜色（新牛档产品需要）
+            else if (mLimitMillis != -1 && todayMillis < mLimitMillis) {
                 mMonthNumPaint.setColor(mUnClickDayColor);
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             }
@@ -302,7 +324,7 @@ class SimpleMonthView extends View {
             }
             //设置两个选中日期之间的背景颜色
             //判断是否选中两个日期
-            if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1)){
+            if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1)) {
                 long start = Utils.getTimeInMillis(mSelectedBeginYear, mSelectedBeginMonth, mSelectedBeginDay);
                 long end = Utils.getTimeInMillis(mSelectedLastYear, mSelectedLastMonth, mSelectedLastDay);
                 long newTime = Utils.getTimeInMillis(mYear, mMonth, day);
@@ -480,6 +502,7 @@ class SimpleMonthView extends View {
             mSelectedLastYear = params.get(VIEW_PARAMS_SELECTED_LAST_YEAR);
         }
 
+
         mMonth = params.get(VIEW_PARAMS_MONTH);
         mYear = params.get(VIEW_PARAMS_YEAR);
 
@@ -509,6 +532,9 @@ class SimpleMonthView extends View {
         }
 
         mNumRows = calculateNumRows();
+
+        //时间限制(限制能点击的最小时间)
+        mLimitMillis = Utils.getLimitMillis(params);
     }
 
     public void setOnDayClickListener(OnDayClickListener onDayClickListener) {

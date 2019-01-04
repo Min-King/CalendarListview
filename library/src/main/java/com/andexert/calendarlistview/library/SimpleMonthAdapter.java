@@ -120,6 +120,10 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_YEAR, year);
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_MONTH, month);
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_WEEK_START, calendar.getFirstDayOfWeek());
+        //设置限制时间
+        drawingParams.put(Config.VIEW_PARAMS_LIMIT_DAY, mController.getLimitDay());
+        drawingParams.put(Config.VIEW_PARAMS_LIMIT_MOUTH, mController.getLimitMonth());
+        drawingParams.put(Config.VIEW_PARAMS_LIMIT_YEAR, mController.getLimitYear());
         monthView.setMonthParams(drawingParams);
         monthView.invalidate();
     }

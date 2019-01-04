@@ -19,4 +19,11 @@ public class Config {
      */
     public static final int TYPE_SINGLE = 102;
 
+    /**
+     * 时间限制(限制能点击的最小时间)
+     */
+    public static final String VIEW_PARAMS_LIMIT_DAY = "limit_day";
+    public static final String VIEW_PARAMS_LIMIT_MOUTH = "limit_mouth";
+    public static final String VIEW_PARAMS_LIMIT_YEAR = "limit_year";
+
 }

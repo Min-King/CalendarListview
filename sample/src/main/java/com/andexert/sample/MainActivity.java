@@ -8,10 +8,11 @@ import android.view.MenuItem;
 
 import com.andexert.calendarlistview.library.Config;
 import com.andexert.calendarlistview.library.DayPickerView;
+import com.andexert.calendarlistview.library.PickerController;
 import com.andexert.calendarlistview.library.SimpleMonthAdapter;
 
 
-public class MainActivity extends Activity implements com.andexert.calendarlistview.library.DatePickerController {
+public class MainActivity extends Activity  {
 
     private DayPickerView dayPickerView;
 
@@ -21,7 +22,7 @@ public class MainActivity extends Activity implements com.andexert.calendarlistv
         setContentView(R.layout.activity_main);
 
         dayPickerView = (DayPickerView) findViewById(R.id.pickerView);
-        dayPickerView.setController(this);
+        dayPickerView.setController(new Controller());
         dayPickerView.setModelType(Config.TYPE_NORMAL);
     }
 
@@ -45,27 +46,25 @@ public class MainActivity extends Activity implements com.andexert.calendarlistv
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public int getMaxYear()
-    {
-        return 0;
-    }
+    class Controller extends PickerController{
+        @Override
+        public int getMinYear() {
+            return 2010;
+        }
 
-    @Override
-    public int getMinYear() {
-        return 2000;
-    }
-
-    @Override
-    public void onDayOfMonthSelected(int year, int month, int day)
-    {
-        Log.e("Day Selected", day + " / " + month + " / " + year);
-    }
-
-    @Override
-    public void onDateRangeSelected(SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays)
-    {
-
-        Log.e("Date range selected", selectedDays.getFirst().toString() + " --> " + selectedDays.getLast().toString());
+//        @Override
+//        public int getLimitYear() {
+//            return 2017;
+//        }
+//
+//        @Override
+//        public int getLimitMonth() {
+//            return 10;
+//        }
+//
+//        @Override
+//        public int getLimitDay() {
+//            return 24;
+//        }
     }
 }
