@@ -2,14 +2,11 @@ package com.andexert.sample;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.andexert.calendarlistview.library.Config;
 import com.andexert.calendarlistview.library.DayPickerView;
 import com.andexert.calendarlistview.library.PickerController;
-import com.andexert.calendarlistview.library.SimpleMonthAdapter;
 
 
 public class MainActivity extends Activity  {
@@ -54,17 +51,17 @@ public class MainActivity extends Activity  {
 
         @Override
         public int getLimitYear() {
-            return 2018;
+            return 2019;
         }
 
         @Override
         public int getLimitMonth() {
-            return 12;
+            return 1;
         }
 
         @Override
         public int getLimitDay() {
-            return 28;
+            return 3;
         }
     }
 }

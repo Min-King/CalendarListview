@@ -238,24 +238,21 @@ class SimpleMonthView extends View {
         if (mOnDayClickListener == null) {
             return;
         }
-
-        //只能选择今天或者之前的时间
-        //不同年比年份
-        if (calendarDay.year < today.year) {
-            //点击日期的时间戳
-            long clickMillis = Utils.getTimeInMillis(calendarDay.year, calendarDay.month + 1, calendarDay.day);
-            //当设置限制点击的时候，判断点击时间是否比限制时间大
-            if (mLimitMillis != -1 && mLimitMillis <= clickMillis) {
-                mOnDayClickListener.onDayClick(this, calendarDay);
-                return;
-            }
-            if (mLimitMillis == -1) {
-                mOnDayClickListener.onDayClick(this, calendarDay);
-            }
-        }
-        //同年比年日期
-        else if ((calendarDay.year == today.year) && (calendarDay.getYearDay() - 1 <= today.yearDay)) {
+        //点击时间戳
+        long clickMillis = Utils.getTimeInMillis(calendarDay.year, calendarDay.month + 1, calendarDay.day);
+        //今天时间戳
+        long todayMillis = Utils.getTimeInMillis(today.year, today.month+1, today.monthDay);
+        //点击日期的时间戳
+        //当设置限制点击的时候，判断点击时间是否比限制时间大
+        if (mLimitMillis != -1 && mLimitMillis <= clickMillis && clickMillis <= todayMillis) {
             mOnDayClickListener.onDayClick(this, calendarDay);
+            return;
+        }
+        if (mLimitMillis == -1) {
+            //只能选择今天或者之前的时间
+            if (clickMillis <= todayMillis) {
+                mOnDayClickListener.onDayClick(this, calendarDay);
+            }
         }
     }
 
@@ -276,7 +273,6 @@ class SimpleMonthView extends View {
         while (day <= mNumCells) {
             //日期item中的时间
             long todayMillis = Utils.getTimeInMillis(mYear, mMonth + 1, day);
-            //设置今日后的日期颜色（新牛档产品需要）
 
             int x = paddingDay * (1 + dayOffset * 2) + mPadding;
             if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear) || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)) {
