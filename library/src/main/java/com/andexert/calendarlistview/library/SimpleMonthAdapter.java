@@ -26,10 +26,12 @@ package com.andexert.calendarlistview.library;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -87,7 +89,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         } else {
             month = (firstMonth + (position % MONTHS_IN_YEAR) + 1) % MONTHS_IN_YEAR;
             //例：2019-1-3（minYear:2018,itemCount:12） 11/12+2018+((0+1+(11%12))/12
-            year = position / MONTHS_IN_YEAR + mController.getMinYear() + ((firstMonth + 1 + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
+            year = (position + 1) / MONTHS_IN_YEAR + mController.getMinYear() + ((firstMonth + 1 + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
         }
 
         int selectedFirstDay = -1;
