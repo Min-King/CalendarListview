@@ -26,12 +26,10 @@ package com.andexert.calendarlistview.library;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
-
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
