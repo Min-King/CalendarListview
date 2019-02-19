@@ -46,7 +46,7 @@ public class MainActivity extends Activity  {
     class Controller extends PickerController{
         @Override
         public int getMinYear() {
-            return 2010;
+            return 2017;
         }
 
         @Override

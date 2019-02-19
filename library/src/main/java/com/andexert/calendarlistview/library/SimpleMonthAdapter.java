@@ -59,8 +59,8 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     public SimpleMonthAdapter(Context context, @AModelType int modelType, DatePickerController datePickerController, TypedArray typedArray) {
         this.typedArray = typedArray;
         calendar = Calendar.getInstance();
-        firstMonth = typedArray.getInt(R.styleable.DayPickerView_firstMonth, calendar.get(Calendar.MONTH));
-        lastMonth = typedArray.getInt(R.styleable.DayPickerView_lastMonth, (calendar.get(Calendar.MONTH) - 1) % MONTHS_IN_YEAR);
+        firstMonth = calendar.get(Calendar.MONTH);
+        lastMonth = (calendar.get(Calendar.MONTH) - 1) % MONTHS_IN_YEAR;
         selectedDays = new SelectedDays<>();
         this.modelType = modelType;
         mContext = context;
@@ -87,7 +87,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         } else {
             month = (firstMonth + (position % MONTHS_IN_YEAR) + 1) % MONTHS_IN_YEAR;
             //例：2019-1-3（minYear:2018,itemCount:12） 11/12+2018+((0+1+(11%12))/12
-            year = (position + 1) / MONTHS_IN_YEAR + mController.getMinYear() + ((firstMonth + 1 + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
+            year = position / MONTHS_IN_YEAR + mController.getMinYear() + ((firstMonth + 1 + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
         }
 
         int selectedFirstDay = -1;
@@ -141,15 +141,8 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         }
         //显示最小时间～当前时间
         else {
-            itemCount = (((calendar.get(Calendar.YEAR) - mController.getMinYear())) * MONTHS_IN_YEAR);
+            itemCount = ((calendar.get(Calendar.YEAR) - mController.getMinYear()) * MONTHS_IN_YEAR);
         }
-
-        if (firstMonth != -1)
-            itemCount -= firstMonth;
-
-        if (lastMonth != -1)
-            itemCount -= (MONTHS_IN_YEAR - lastMonth) - 1;
-        //需要显示的月份个数
         return itemCount;
     }
 
