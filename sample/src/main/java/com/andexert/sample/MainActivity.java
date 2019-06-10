@@ -19,6 +19,7 @@ public class MainActivity extends Activity  {
         setContentView(R.layout.activity_main);
 
         dayPickerView = (DayPickerView) findViewById(R.id.pickerView);
+        dayPickerView.setTodaySelect(false);
         dayPickerView.setController(new Controller());
         dayPickerView.setModelType(Config.TYPE_NORMAL);
     }
@@ -47,21 +48,6 @@ public class MainActivity extends Activity  {
         @Override
         public int getMinYear() {
             return 2017;
-        }
-
-        @Override
-        public int getLimitYear() {
-            return 2019;
-        }
-
-        @Override
-        public int getLimitMonth() {
-            return 1;
-        }
-
-        @Override
-        public int getLimitDay() {
-            return 3;
         }
     }
 }

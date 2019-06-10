@@ -1,18 +1,14 @@
 /***********************************************************************************
  * The MIT License (MIT)
-
  * Copyright (c) 2014 Robin Chutaux
-
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,10 +24,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.MotionEvent;
@@ -95,6 +93,10 @@ class SimpleMonthView extends View {
     protected int mSelectedDaysColor;
     protected int mSelectedIntervalBGColor;
     /**
+     * 今天不可选时显示的文字颜色
+     */
+    protected int mColorTodayNoSelect;
+    /**
      * 不能点击的日期颜色
      */
     protected int mUnClickDayColor;
@@ -142,6 +144,13 @@ class SimpleMonthView extends View {
 
     private OnDayClickListener mOnDayClickListener;
 
+    /**
+     * 判断今天能否可以选择
+     * true：可选，文字显示黑色
+     * false：不可选，文字显示灰 色
+     */
+    private boolean isTodaySelect;
+
     public SimpleMonthView(Context context, TypedArray typedArray) {
         super(context);
 
@@ -160,6 +169,7 @@ class SimpleMonthView extends View {
         mSelectedDaysColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayBackground, resources.getColor(R.color.selected_day_background));
         mMonthTitleBGColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayText, resources.getColor(R.color.selected_day_text));
         mSelectedIntervalBGColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedIntervalBackground, resources.getColor(R.color.selected_interval_background));
+        mColorTodayNoSelect = typedArray.getColor(R.styleable.DayPickerView_colorTodayNoSelect, resources.getColor(R.color.greyText));
         mUnClickDayColor = typedArray.getColor(R.styleable.DayPickerView_colorUnClick, resources.getColor(R.color.greyText));
 
         mDrawRect = typedArray.getBoolean(R.styleable.DayPickerView_drawRoundRect, false);
@@ -241,7 +251,7 @@ class SimpleMonthView extends View {
         //点击时间戳
         long clickMillis = Utils.getTimeInMillis(calendarDay.year, calendarDay.month + 1, calendarDay.day);
         //今天时间戳
-        long todayMillis = Utils.getTimeInMillis(today.year, today.month+1, today.monthDay);
+        long todayMillis = Utils.getTimeInMillis(today.year, today.month + 1, today.monthDay);
         //点击日期的时间戳
         //当设置限制点击的时候，判断点击时间是否比限制时间大
         if (mLimitMillis != -1 && mLimitMillis <= clickMillis && clickMillis <= todayMillis) {
@@ -249,8 +259,12 @@ class SimpleMonthView extends View {
             return;
         }
         if (mLimitMillis == -1) {
-            //只能选择今天或者之前的时间
-            if (clickMillis <= todayMillis) {
+            //点击之前的时间
+            if (clickMillis < todayMillis) {
+                mOnDayClickListener.onDayClick(this, calendarDay);
+            }
+            //点击今天&&今天可以选择
+            else if (clickMillis == todayMillis && isTodaySelect) {
                 mOnDayClickListener.onDayClick(this, calendarDay);
             }
         }
@@ -280,12 +294,13 @@ class SimpleMonthView extends View {
             }
             //设置当前日期文字颜色大小
             if (mHasToday && (mToday == day)) {
-                mMonthNumPaint.setColor(mCurrentDayTextColor);
+                mMonthNumPaint.setColor(isTodaySelect ? mCurrentDayTextColor : mColorTodayNoSelect);
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
             }
-            //设置今日后的日期颜色（新牛档产品需要）
+            //设置今日后的日期颜色
             else if (mToday != -1 && day > mToday) {
-                mMonthNumPaint.setColor(mUnClickDayColor);
+                //新牛档产品需要今日之后的日期不可显示
+                mMonthNumPaint.setColor(Color.TRANSPARENT);
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             }
             //设置限制日期之前的时间
@@ -535,6 +550,15 @@ class SimpleMonthView extends View {
 
         //时间限制(限制能点击的最小时间)
         mLimitMillis = Utils.getLimitMillis(params);
+    }
+
+    /**
+     * 是否设置今天可以选择
+     *
+     * @param isSelect
+     */
+    public void setTodaySelect(boolean isSelect) {
+        this.isTodaySelect = isSelect;
     }
 
     public void setOnDayClickListener(OnDayClickListener onDayClickListener) {

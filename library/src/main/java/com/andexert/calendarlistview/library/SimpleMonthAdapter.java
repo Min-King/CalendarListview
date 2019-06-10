@@ -56,6 +56,13 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
      */
     private int modelType = Config.TYPE_NORMAL;
 
+    /**
+     * 判断今天能否可以选择
+     * true：可选，文字显示黑色
+     * false：不可选，文字显示灰 色
+     */
+    private boolean isTodaySelect;
+
     public SimpleMonthAdapter(Context context, @AModelType int modelType, DatePickerController datePickerController, TypedArray typedArray) {
         this.typedArray = typedArray;
         calendar = Calendar.getInstance();
@@ -77,6 +84,8 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final SimpleMonthView monthView = viewHolder.simpleMonthView;
+        //设置今天是否可以选择
+        monthView.setTodaySelect(isTodaySelect);
         final HashMap<String, Integer> drawingParams = new HashMap<String, Integer>();
         int month;
         int year;
@@ -121,9 +130,15 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_MONTH, month);
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_WEEK_START, calendar.getFirstDayOfWeek());
         //设置限制时间
-        drawingParams.put(Config.VIEW_PARAMS_LIMIT_DAY, mController.getLimitDay());
-        drawingParams.put(Config.VIEW_PARAMS_LIMIT_MOUTH, mController.getLimitMonth());
-        drawingParams.put(Config.VIEW_PARAMS_LIMIT_YEAR, mController.getLimitYear());
+        if(mController.getLimitDay()!=-1) {
+            drawingParams.put(Config.VIEW_PARAMS_LIMIT_DAY, mController.getLimitDay());
+        }
+        if(mController.getLimitMonth()!=-1) {
+            drawingParams.put(Config.VIEW_PARAMS_LIMIT_MOUTH, mController.getLimitMonth());
+        }
+        if(mController.getLimitYear()!=-1) {
+            drawingParams.put(Config.VIEW_PARAMS_LIMIT_YEAR, mController.getLimitYear());
+        }
         monthView.setMonthParams(drawingParams);
         monthView.invalidate();
     }
@@ -324,6 +339,14 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
     public SelectedDays<CalendarDay> getSelectedDays() {
         return selectedDays;
+    }
+
+    /**
+     * 是否设置今天可以选择
+     * @param isSelect
+     */
+    public void setTodaySelect(boolean isSelect){
+        this.isTodaySelect = isSelect;
     }
 
     public static class SelectedDays<K> implements Serializable {

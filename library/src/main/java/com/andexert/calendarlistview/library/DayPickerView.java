@@ -1,18 +1,14 @@
 /***********************************************************************************
  * The MIT License (MIT)
-
  * Copyright (c) 2014 Robin Chutaux
-
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,6 +34,13 @@ public class DayPickerView extends RecyclerView {
     protected int mPreviousScrollState = 0;
     private TypedArray typedArray;
     private OnScrollListener onScrollListener;
+
+    /**
+     * 判断今天能否可以选择
+     * true：可选，文字显示黑色
+     * false：不可选，文字显示灰 色
+     */
+    private boolean isTodaySelect = true;
 
     public DayPickerView(Context context) {
         this(context, null);
@@ -92,6 +95,7 @@ public class DayPickerView extends RecyclerView {
             mAdapter = new SimpleMonthAdapter(getContext(), Config.TYPE_NORMAL, mController, typedArray);
         }
         mAdapter.notifyDataSetChanged();
+        mAdapter.setTodaySelect(isTodaySelect);
     }
 
     /**
@@ -111,6 +115,13 @@ public class DayPickerView extends RecyclerView {
 
     public SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> getSelectedDays() {
         return mAdapter.getSelectedDays();
+    }
+
+    public void setTodaySelect(boolean todaySelect) {
+        isTodaySelect = todaySelect;
+        if (mAdapter != null) {
+            mAdapter.setTodaySelect(isTodaySelect);
+        }
     }
 
     protected DatePickerController getController() {

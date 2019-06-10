@@ -11,6 +11,8 @@
         <attr name="colorNormalDay" format="color" />
         <attr name="colorMonthName" format="color" />
         <attr name="colorDayName" format="color" />
+        <!-- 今天不可选时显示的文字颜色 -->
+        <attr name="colorTodayNoSelect" format="color" />
         <attr name="textSizeDay" format="dimension" />
         <!-- "今天"的文字大小 -->
         <attr name="textSizeToday" format="dimension" />
