@@ -1,18 +1,14 @@
 /***********************************************************************************
  * The MIT License (MIT)
-
  * Copyright (c) 2014 Robin Chutaux
-
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -130,15 +127,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_MONTH, month);
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_WEEK_START, calendar.getFirstDayOfWeek());
         //设置限制时间
-        if(mController.getLimitDay()!=-1) {
-            drawingParams.put(Config.VIEW_PARAMS_LIMIT_DAY, mController.getLimitDay());
-        }
-        if(mController.getLimitMonth()!=-1) {
-            drawingParams.put(Config.VIEW_PARAMS_LIMIT_MOUTH, mController.getLimitMonth());
-        }
-        if(mController.getLimitYear()!=-1) {
-            drawingParams.put(Config.VIEW_PARAMS_LIMIT_YEAR, mController.getLimitYear());
-        }
+        monthView.setLimitMillis(mController.getLimitMillis());
         monthView.setMonthParams(drawingParams);
         monthView.invalidate();
     }
@@ -343,9 +332,10 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
     /**
      * 是否设置今天可以选择
+     *
      * @param isSelect
      */
-    public void setTodaySelect(boolean isSelect){
+    public void setTodaySelect(boolean isSelect) {
         this.isTodaySelect = isSelect;
     }
 

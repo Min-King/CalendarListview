@@ -22,8 +22,6 @@ public class Config {
     /**
      * 时间限制(限制能点击的最小时间)
      */
-    public static final String VIEW_PARAMS_LIMIT_DAY = "limit_day";
-    public static final String VIEW_PARAMS_LIMIT_MOUTH = "limit_mouth";
-    public static final String VIEW_PARAMS_LIMIT_YEAR = "limit_year";
+    public static final String VIEW_PARAMS_LIMIT_TIME= "limit_time";
 
 }

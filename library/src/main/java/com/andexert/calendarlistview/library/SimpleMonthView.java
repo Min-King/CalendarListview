@@ -548,8 +548,6 @@ class SimpleMonthView extends View {
 
         mNumRows = calculateNumRows();
 
-        //时间限制(限制能点击的最小时间)
-        mLimitMillis = Utils.getLimitMillis(params);
     }
 
     /**
@@ -559,6 +557,15 @@ class SimpleMonthView extends View {
      */
     public void setTodaySelect(boolean isSelect) {
         this.isTodaySelect = isSelect;
+    }
+
+    /**
+     * 时间限制(限制能点击的最小时间)
+     *
+     * @param mLimitMillis
+     */
+    public void setLimitMillis(long mLimitMillis) {
+        this.mLimitMillis = mLimitMillis;
     }
 
     public void setOnDayClickListener(OnDayClickListener onDayClickListener) {

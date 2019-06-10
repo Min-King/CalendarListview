@@ -27,11 +27,11 @@ public interface DatePickerController {
 
 	/**
 	 * 限制选择的最小时间（注：限制当天可以正常显示选择）
+	 * 既是设置可选区域的开始时间
+	 * 格式：1559381071(不包含毫秒)
 	 * @return
 	 */
-	public abstract int getLimitDay();
-	public abstract int getLimitMonth();
-	public abstract int getLimitYear();
+	public abstract long getLimitMillis();
 
 	public abstract int getMaxYear();
 

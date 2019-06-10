@@ -6,18 +6,9 @@ package com.andexert.calendarlistview.library;
  * @desription
  */
 public abstract class PickerController implements DatePickerController {
-    @Override
-    public int getLimitDay() {
-        return -1;
-    }
 
     @Override
-    public int getLimitMonth() {
-        return -1;
-    }
-
-    @Override
-    public int getLimitYear() {
+    public long getLimitMillis() {
         return -1;
     }
 

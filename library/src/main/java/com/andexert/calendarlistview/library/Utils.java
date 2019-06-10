@@ -34,20 +34,4 @@ public class Utils {
         }
         return 0;
     }
-
-    /**
-     * 获取时间限制的时间戳
-     *
-     * @return
-     */
-    public static long getLimitMillis(HashMap<String, Integer> params) {
-        //判断是否设置限制时间
-        if(params.containsKey(Config.VIEW_PARAMS_LIMIT_DAY)&&params.containsKey(Config.VIEW_PARAMS_LIMIT_MOUTH)&&params.containsKey(Config.VIEW_PARAMS_LIMIT_YEAR)){
-            long millis = getTimeInMillis(params.get(Config.VIEW_PARAMS_LIMIT_YEAR),params.get(Config.VIEW_PARAMS_LIMIT_MOUTH),params.get(Config.VIEW_PARAMS_LIMIT_DAY));
-            return millis;
-        }else {
-            return -1;
-        }
-    }
-
 }
