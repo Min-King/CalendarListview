@@ -14,7 +14,7 @@
         calendar:colorMonthName="#3B3B3B"
         calendar:colorNormalDay="#3B3B3B"
         calendar:colorSelectedDayBackground="#FFD720"
-        calendar:colorSelectedDayText="#3B3B3B"
+        calendar:colorSelectedDayText="#AA3456"
         calendar:currentDaySelected="false"
         calendar:drawMonthDayLabels="false"
         calendar:drawRoundRect="false" />

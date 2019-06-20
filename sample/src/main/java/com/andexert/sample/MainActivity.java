@@ -49,10 +49,5 @@ public class MainActivity extends Activity  {
         public int getMinYear() {
             return 2017;
         }
-
-        @Override
-        public long getLimitMillis() {
-            return 1559318400;
-        }
     }
 }

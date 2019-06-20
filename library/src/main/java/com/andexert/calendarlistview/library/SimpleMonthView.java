@@ -334,7 +334,7 @@ class SimpleMonthView extends View {
             if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1 && mSelectedBeginYear == mSelectedLastYear && mYear == mSelectedBeginYear) &&
                     ((mMonth > mSelectedBeginMonth && mMonth < mSelectedLastMonth && mSelectedBeginMonth < mSelectedLastMonth) ||
                             (mMonth < mSelectedBeginMonth && mMonth > mSelectedLastMonth && mSelectedBeginMonth > mSelectedLastMonth))) {
-                mMonthNumPaint.setColor(mSelectedDaysColor);
+                mMonthNumPaint.setColor(mMonthTitleBGColor);
                 CalendarUtils.Log("color 5 " + day);
             }
             //设置两个选中日期之间的背景颜色
@@ -352,6 +352,7 @@ class SimpleMonthView extends View {
                 //日期在开始日期和结束日期之间
                 if (newTime > start && newTime < end) {
                     canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedIntervalPaint);
+                    mMonthNumPaint.setColor(mMonthTitleBGColor);
                     CalendarUtils.Log("color 6 " + mYear + "  " + mMonth + "  " + day);
                 }
             }
