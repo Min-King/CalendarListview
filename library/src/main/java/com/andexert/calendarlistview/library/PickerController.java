@@ -13,6 +13,11 @@ public abstract class PickerController implements DatePickerController {
     }
 
     @Override
+    public long getMaxMillis() {
+        return -1;
+    }
+
+    @Override
     public int getMaxYear() {
         return 0;
     }

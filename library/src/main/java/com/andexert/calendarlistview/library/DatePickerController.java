@@ -32,6 +32,7 @@ public interface DatePickerController {
 	 * @return
 	 */
 	public abstract long getLimitMillis();
+	public abstract long getMaxMillis();
 
 	public abstract int getMaxYear();
 

@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.andexert.calendarlistview.library.Config;
 import com.andexert.calendarlistview.library.DayPickerView;
 import com.andexert.calendarlistview.library.PickerController;
 
+import java.sql.Time;
+import java.util.Date;
 
-public class MainActivity extends Activity  {
+
+public class MainActivity extends Activity {
 
     private DayPickerView dayPickerView;
 
@@ -44,10 +48,17 @@ public class MainActivity extends Activity  {
         return super.onOptionsItemSelected(item);
     }
 
-    class Controller extends PickerController{
+    class Controller extends PickerController {
         @Override
         public int getMinYear() {
             return 2017;
+        }
+
+        @Override
+        public long getMaxMillis() {
+            long timeMillis = System.currentTimeMillis();
+            Date date = new Date(timeMillis + (1000 * 60 * 60 * 24*5));
+            return date.getTime()/1000;
         }
     }
 }

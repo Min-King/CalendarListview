@@ -124,6 +124,10 @@ class SimpleMonthView extends View {
      * 时间限制(限制能点击的最小时间)
      */
     protected long mLimitMillis;
+    /**
+     * 时间限制(限制能点击的最大时间)
+     */
+    protected long mMaxMillis;
 
     /**
      * 是否绘制月份表头 true绘制
@@ -258,6 +262,10 @@ class SimpleMonthView extends View {
             mOnDayClickListener.onDayClick(this, calendarDay);
             return;
         }
+        if (mLimitMillis != -1 && mLimitMillis <= clickMillis && clickMillis <= mMaxMillis) {
+            mOnDayClickListener.onDayClick(this, calendarDay);
+            return;
+        }
         if (mLimitMillis == -1) {
             //点击之前的时间
             if (clickMillis < todayMillis) {
@@ -265,6 +273,8 @@ class SimpleMonthView extends View {
             }
             //点击今天&&今天可以选择
             else if (clickMillis == todayMillis && isTodaySelect) {
+                mOnDayClickListener.onDayClick(this, calendarDay);
+            } else if (clickMillis <= mMaxMillis) {
                 mOnDayClickListener.onDayClick(this, calendarDay);
             }
         }
@@ -299,9 +309,14 @@ class SimpleMonthView extends View {
             }
             //设置今日后的日期颜色
             else if (mToday != -1 && day > mToday) {
-                //新牛档产品需要今日之后的日期不可显示
-                mMonthNumPaint.setColor(Color.TRANSPARENT);
-                mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                if (mMaxMillis != -1 && todayMillis <= mMaxMillis) {
+                    mMonthNumPaint.setColor(mDayNumColor);
+                    mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                } else {
+                    //新牛档产品需要今日之后的日期不可显示
+                    mMonthNumPaint.setColor(Color.TRANSPARENT);
+                    mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                }
             }
             //设置限制日期之前的时间
             else if (mLimitMillis != -1 && todayMillis < mLimitMillis) {
@@ -567,6 +582,14 @@ class SimpleMonthView extends View {
      */
     public void setLimitMillis(long mLimitMillis) {
         this.mLimitMillis = mLimitMillis;
+    }
+
+
+    /**
+     * 时间限制(限制能点击的最大时间)
+     */
+    public void setMaxMillis(long maxMillis) {
+        this.mMaxMillis = maxMillis;
     }
 
     public void setOnDayClickListener(OnDayClickListener onDayClickListener) {

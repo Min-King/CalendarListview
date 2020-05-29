@@ -22,6 +22,7 @@ package com.andexert.calendarlistview.library;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -128,6 +129,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         drawingParams.put(SimpleMonthView.VIEW_PARAMS_WEEK_START, calendar.getFirstDayOfWeek());
         //设置限制时间
         monthView.setLimitMillis(mController.getLimitMillis());
+        monthView.setMaxMillis(mController.getMaxMillis());
         monthView.setMonthParams(drawingParams);
         monthView.invalidate();
     }
@@ -145,6 +147,8 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         }
         //显示最小时间～当前时间
         else {
+            int i = calendar.get(Calendar.YEAR);
+            Log.e("asdfsdf",i+"");
             itemCount = ((calendar.get(Calendar.YEAR) - mController.getMinYear()) * MONTHS_IN_YEAR);
         }
         return itemCount;
