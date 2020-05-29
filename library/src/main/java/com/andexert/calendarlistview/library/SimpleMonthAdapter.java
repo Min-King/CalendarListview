@@ -148,7 +148,6 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         //显示最小时间～当前时间
         else {
             int i = calendar.get(Calendar.YEAR);
-            Log.e("asdfsdf",i+"");
             itemCount = ((calendar.get(Calendar.YEAR) - mController.getMinYear()) * MONTHS_IN_YEAR);
         }
         return itemCount;
