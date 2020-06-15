@@ -7,6 +7,8 @@
     tools:context=".MainActivity">
 
     <com.andexert.calendarlistview.library.DayPickerView
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:id="@+id/pickerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

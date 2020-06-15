@@ -3,6 +3,7 @@
     <declare-styleable name="DayPickerView">
         <attr name="colorCurrentDay" format="color" />
         <attr name="colorSelectedDayBackground" format="color" />
+        <attr name="colormiddleSelectedDayBackground" format="color" />
         <attr name="colorSelectedDayText" format="color" />
         <attr name="colorSelectedIntervalBackground" format="color" />
         <!-- 不能点击的日期的颜色 -->

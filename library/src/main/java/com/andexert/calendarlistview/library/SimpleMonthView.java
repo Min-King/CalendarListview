@@ -29,7 +29,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.MotionEvent;
@@ -79,6 +78,7 @@ class SimpleMonthView extends View {
     protected Paint mMonthTitleBGPaint;
     protected Paint mMonthTitlePaint;
     protected Paint mSelectedCirclePaint;
+    protected Paint mSelectedMiddlePaint;
 
     /**
      * 选中两个日期之间的背景
@@ -91,6 +91,7 @@ class SimpleMonthView extends View {
     protected int mMonthTitleBGColor;
     protected int mPreviousDayColor;
     protected int mSelectedDaysColor;
+    protected int mSelectedMiddleDaysColor;
     protected int mSelectedIntervalBGColor;
     /**
      * 今天不可选时显示的文字颜色
@@ -171,6 +172,7 @@ class SimpleMonthView extends View {
         mDayNumColor = typedArray.getColor(R.styleable.DayPickerView_colorNormalDay, resources.getColor(R.color.normal_day));
         mPreviousDayColor = typedArray.getColor(R.styleable.DayPickerView_colorPreviousDay, resources.getColor(R.color.normal_day));
         mSelectedDaysColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayBackground, resources.getColor(R.color.selected_day_background));
+        mSelectedMiddleDaysColor = typedArray.getColor(R.styleable.DayPickerView_colormiddleSelectedDayBackground, resources.getColor(R.color.selected_day_middle_background));
         mMonthTitleBGColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayText, resources.getColor(R.color.selected_day_text));
         mSelectedIntervalBGColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedIntervalBackground, resources.getColor(R.color.selected_interval_background));
         mColorTodayNoSelect = typedArray.getColor(R.styleable.DayPickerView_colorTodayNoSelect, resources.getColor(R.color.greyText));
@@ -300,7 +302,9 @@ class SimpleMonthView extends View {
 
             int x = paddingDay * (1 + dayOffset * 2) + mPadding;
             if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear) || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)) {
-                canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedCirclePaint);
+//                canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedCirclePaint);
+                canvas.drawRoundRect(x - DAY_SELECTED_CIRCLE_SIZE, y - MINI_DAY_NUMBER_TEXT_SIZE / 3 - DAY_SELECTED_CIRCLE_SIZE,
+                        x + DAY_SELECTED_CIRCLE_SIZE, y - MINI_DAY_NUMBER_TEXT_SIZE / 3 + DAY_SELECTED_CIRCLE_SIZE,4,4,mSelectedCirclePaint);
             }
             //设置当前日期文字颜色大小
             if (mHasToday && (mToday == day)) {
@@ -366,7 +370,9 @@ class SimpleMonthView extends View {
                 }
                 //日期在开始日期和结束日期之间
                 if (newTime > start && newTime < end) {
-                    canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedIntervalPaint);
+//                    canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedIntervalPaint);
+                    canvas.drawRect(x - DAY_SELECTED_CIRCLE_SIZE, y - MINI_DAY_NUMBER_TEXT_SIZE / 3 - DAY_SELECTED_CIRCLE_SIZE,
+                            x + DAY_SELECTED_CIRCLE_SIZE, y - MINI_DAY_NUMBER_TEXT_SIZE / 3 + DAY_SELECTED_CIRCLE_SIZE, mSelectedMiddlePaint);
                     mMonthNumPaint.setColor(mMonthTitleBGColor);
                     CalendarUtils.Log("color 6 " + mYear + "  " + mMonth + "  " + day);
                 }
@@ -376,13 +382,18 @@ class SimpleMonthView extends View {
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
                 CalendarUtils.Log("color 7 " + day);
             }
+            boolean isStartOrEndContainToday=false;
+            if((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear)
+                    || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)){
+                isStartOrEndContainToday=true;
+            }
 
             //设置当前日期文字颜色大小
-            if (mHasToday && (mToday == day)) {
+            if (mHasToday && (mToday == day)&&!isStartOrEndContainToday) {
                 mMonthNumPaint.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE);
-                canvas.drawText(String.format("%d", day), x, y - MINI_DAY_NUMBER_TEXT_SIZE_TODAY / 2 - 1, mMonthNumPaint);
+                canvas.drawText(String.format("%d", day), x, y, mMonthNumPaint);
                 mMonthNumPaint.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE_TODAY);
-                canvas.drawText("今天", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY / 2 + 1, mMonthNumPaint);
+                canvas.drawText("今天", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
             }
             //设置非当前日期文字颜色大小
             else {
@@ -390,6 +401,34 @@ class SimpleMonthView extends View {
                 canvas.drawText(String.format("%d", day), x, y, mMonthNumPaint);
             }
 
+            if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1)) {
+                if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear)
+                        || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)) {
+                    mMonthNumPaint.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE);
+                    canvas.drawText(String.format("%d", day), x, y, mMonthNumPaint);
+                    mMonthNumPaint.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE_TODAY);
+                    long start = Utils.getTimeInMillis(mSelectedBeginYear, mSelectedBeginMonth, mSelectedBeginDay);
+                    long end = Utils.getTimeInMillis(mSelectedLastYear, mSelectedLastMonth, mSelectedLastDay);
+                    if (end > start) {
+                        if (mSelectedBeginDay == day) {
+                            canvas.drawText("开始", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
+                            CalendarUtils.Log("color" + "开始" + day);
+                        } else {
+                            canvas.drawText("结束", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
+                            CalendarUtils.Log("color " + "结束" + day);
+                        }
+                    } else {
+                        if (mSelectedLastDay == day) {
+                            canvas.drawText("开始", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
+                            CalendarUtils.Log("color" + "开始" + day);
+                        } else {
+                            canvas.drawText("结束", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
+                            CalendarUtils.Log("color " + "结束" + day);
+                        }
+                    }
+
+                }
+            }
 
             dayOffset++;
             if (dayOffset == mNumDays) {
@@ -439,6 +478,14 @@ class SimpleMonthView extends View {
         mSelectedCirclePaint.setTextAlign(Align.CENTER);
         mSelectedCirclePaint.setStyle(Style.FILL);
         mSelectedCirclePaint.setAlpha(SELECTED_CIRCLE_ALPHA);
+
+        mSelectedMiddlePaint = new Paint();
+        mSelectedMiddlePaint.setFakeBoldText(true);
+        mSelectedMiddlePaint.setAntiAlias(true);
+        mSelectedMiddlePaint.setColor(mSelectedMiddleDaysColor);
+        mSelectedMiddlePaint.setTextAlign(Align.CENTER);
+        mSelectedMiddlePaint.setStyle(Style.FILL);
+        mSelectedMiddlePaint.setAlpha(SELECTED_CIRCLE_ALPHA);
 
         mMonthDayLabelPaint = new Paint();
         mMonthDayLabelPaint.setAntiAlias(true);
