@@ -84,6 +84,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         final SimpleMonthView monthView = viewHolder.simpleMonthView;
         //设置今天是否可以选择
         monthView.setTodaySelect(isTodaySelect);
+        monthView.setModelType(modelType);
         final HashMap<String, Integer> drawingParams = new HashMap<String, Integer>();
         int month;
         int year;

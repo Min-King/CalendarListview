@@ -129,6 +129,10 @@ class SimpleMonthView extends View {
      * 时间限制(限制能点击的最大时间)
      */
     protected long mMaxMillis;
+    /**
+     * 控件模式
+     */
+    protected int modelType;
 
     /**
      * 是否绘制月份表头 true绘制
@@ -304,7 +308,7 @@ class SimpleMonthView extends View {
             if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear) || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)) {
 //                canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE, mSelectedCirclePaint);
                 canvas.drawRoundRect(x - DAY_SELECTED_CIRCLE_SIZE, y - MINI_DAY_NUMBER_TEXT_SIZE / 3 - DAY_SELECTED_CIRCLE_SIZE,
-                        x + DAY_SELECTED_CIRCLE_SIZE, y - MINI_DAY_NUMBER_TEXT_SIZE / 3 + DAY_SELECTED_CIRCLE_SIZE,4,4,mSelectedCirclePaint);
+                        x + DAY_SELECTED_CIRCLE_SIZE, y - MINI_DAY_NUMBER_TEXT_SIZE / 3 + DAY_SELECTED_CIRCLE_SIZE, 4, 4, mSelectedCirclePaint);
             }
             //设置当前日期文字颜色大小
             if (mHasToday && (mToday == day)) {
@@ -382,14 +386,14 @@ class SimpleMonthView extends View {
                 mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
                 CalendarUtils.Log("color 7 " + day);
             }
-            boolean isStartOrEndContainToday=false;
-            if((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear)
-                    || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)){
-                isStartOrEndContainToday=true;
+            boolean isStartOrEndContainToday = false;
+            if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear)
+                    || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)) {
+                isStartOrEndContainToday = true;
             }
 
             //设置当前日期文字颜色大小
-            if (mHasToday && (mToday == day)&&!isStartOrEndContainToday) {
+            if (mHasToday && (mToday == day) && !isStartOrEndContainToday) {
                 mMonthNumPaint.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE);
                 canvas.drawText(String.format("%d", day), x, y, mMonthNumPaint);
                 mMonthNumPaint.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE_TODAY);
@@ -401,7 +405,7 @@ class SimpleMonthView extends View {
                 canvas.drawText(String.format("%d", day), x, y, mMonthNumPaint);
             }
 
-            if ((mSelectedBeginDay != -1 && mSelectedLastDay != -1)) {
+            if ((mSelectedBeginDay != -1 || mSelectedLastDay != -1) &&modelType== Config.TYPE_NORMAL) {
                 if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear)
                         || (mMonth == mSelectedLastMonth && mSelectedLastDay == day && mSelectedLastYear == mYear)) {
                     mMonthNumPaint.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE);
@@ -409,24 +413,30 @@ class SimpleMonthView extends View {
                     mMonthNumPaint.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE_TODAY);
                     long start = Utils.getTimeInMillis(mSelectedBeginYear, mSelectedBeginMonth, mSelectedBeginDay);
                     long end = Utils.getTimeInMillis(mSelectedLastYear, mSelectedLastMonth, mSelectedLastDay);
-                    if (end > start) {
+                    if (mSelectedBeginDay != -1 && mSelectedLastDay != -1) {
+                        if (end > start) {
+                            if (mSelectedBeginDay == day) {
+                                canvas.drawText("开始", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
+                                CalendarUtils.Log("color" + "开始" + day);
+                            } else {
+                                canvas.drawText("结束", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
+                                CalendarUtils.Log("color " + "结束" + day);
+                            }
+                        } else {
+                            if (mSelectedLastDay == day) {
+                                canvas.drawText("开始", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
+                                CalendarUtils.Log("color" + "开始" + day);
+                            } else {
+                                canvas.drawText("结束", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
+                                CalendarUtils.Log("color " + "结束" + day);
+                            }
+                        }
+                    } else if (mSelectedBeginDay != -1) {
                         if (mSelectedBeginDay == day) {
                             canvas.drawText("开始", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
                             CalendarUtils.Log("color" + "开始" + day);
-                        } else {
-                            canvas.drawText("结束", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
-                            CalendarUtils.Log("color " + "结束" + day);
-                        }
-                    } else {
-                        if (mSelectedLastDay == day) {
-                            canvas.drawText("开始", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
-                            CalendarUtils.Log("color" + "开始" + day);
-                        } else {
-                            canvas.drawText("结束", x, y + MINI_DAY_NUMBER_TEXT_SIZE_TODAY + 1, mMonthNumPaint);
-                            CalendarUtils.Log("color " + "结束" + day);
                         }
                     }
-
                 }
             }
 
@@ -537,6 +547,7 @@ class SimpleMonthView extends View {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             SimpleMonthAdapter.CalendarDay calendarDay = getDayFromLocation(event.getX(), event.getY());
             if (calendarDay != null) {
+                invalidate();
                 onDayClick(calendarDay);
             }
         }
@@ -641,6 +652,10 @@ class SimpleMonthView extends View {
 
     public void setOnDayClickListener(OnDayClickListener onDayClickListener) {
         mOnDayClickListener = onDayClickListener;
+    }
+
+    public void setModelType(int modelType) {
+        this.modelType = modelType;
     }
 
     public static abstract interface OnDayClickListener {
