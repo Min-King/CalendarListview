@@ -36,4 +36,9 @@ public abstract class PickerController implements DatePickerController {
     public void onDateRangeSelected(SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays) {
 
     }
+
+    @Override
+    public SimpleMonthAdapter.SelectedDays setDateRangeSelected() {
+        return new SimpleMonthAdapter.SelectedDays();
+    }
 }

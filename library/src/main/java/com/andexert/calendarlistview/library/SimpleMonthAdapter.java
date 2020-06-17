@@ -39,7 +39,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     private final Context mContext;
     private final DatePickerController mController;
     private final Calendar calendar;
-    private final SelectedDays<CalendarDay> selectedDays;
+    private  SelectedDays<CalendarDay> selectedDays;
     /**
      * 开始月份
      */
@@ -66,10 +66,10 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         calendar = Calendar.getInstance();
         firstMonth = calendar.get(Calendar.MONTH);
         lastMonth = (calendar.get(Calendar.MONTH) - 1) % MONTHS_IN_YEAR;
-        selectedDays = new SelectedDays<>();
         this.modelType = modelType;
         mContext = context;
         mController = datePickerController;
+        selectedDays = mController.setDateRangeSelected();
         init();
     }
 

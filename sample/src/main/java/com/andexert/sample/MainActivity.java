@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.andexert.calendarlistview.library.Config;
 import com.andexert.calendarlistview.library.DayPickerView;
 import com.andexert.calendarlistview.library.PickerController;
+import com.andexert.calendarlistview.library.SimpleMonthAdapter;
 
 import java.sql.Time;
 import java.util.Date;
@@ -60,5 +63,17 @@ public class MainActivity extends Activity {
             Date date = new Date(timeMillis + (1000 * 60 * 60 * 24*5));
             return date.getTime()/1000;
         }
+
+//        @Override
+//        public SimpleMonthAdapter.SelectedDays setDateRangeSelected() {
+//            SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays =new SimpleMonthAdapter.SelectedDays<>();
+//            SimpleMonthAdapter.CalendarDay time=new SimpleMonthAdapter.CalendarDay();
+//            SimpleMonthAdapter.CalendarDay time1=new SimpleMonthAdapter.CalendarDay();
+//            time.setDay(2020,3,17);
+//            time1.setDay(2020,3,29);
+//            selectedDays.setFirst(time);
+//            selectedDays.setLast(time1);
+//            return selectedDays;
+//        }
     }
 }
